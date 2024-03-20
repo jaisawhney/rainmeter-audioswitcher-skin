@@ -2,6 +2,8 @@ function Initialize()
 	FindDevices()
 
 	SKIN:Bang('!CommandMeasure','MeasureWin7Audio','SetOutputIndex  ' .. SKIN:GetVariable('SpeakerDeviceIndex'))
+	
+	UpdateDeviceIcon()
 end
 
 -- Initial device lookup (on refresh/load)
@@ -29,13 +31,32 @@ function FindDevices()
 	end
 end
 
--- Get the name of the current audio device
+-- Gets the name of the current audio device
 function GetDeviceName()
 	deviceName = SKIN:GetMeasure('MeasureWin7Audio'):GetStringValue()
 	return deviceName
 end
 
--- Update the icon
+-- Updates the correct icon to match the current output device and refreshes the visualizer
 function UpdateDeviceIcon()
+	SpeakerDeviceMeter = SKIN:GetMeter('Speakers')
+	HeadphoneDeviceMeter = SKIN:GetMeter('Headphones')
 
+	VisualizerName=SKIN:GetVariable('VisualizerName')
+	VisualizerConfig=SKIN:GetVariable('VisualizerConfig')
+
+	deviceName = GetDeviceName()
+
+	if deviceName == SKIN:GetVariable('SpeakerDeviceName') then
+		SpeakerDeviceMeter:Show()
+		HeadphoneDeviceMeter:Hide()
+
+		SKIN:Bang('!Refresh', VisualizerName, VisualizerConfig)
+
+	elseif deviceName == SKIN:GetVariable('HeadphoneDeviceName') then
+		SpeakerDeviceMeter:Hide()
+		HeadphoneDeviceMeter:Show()
+		
+		SKIN:Bang('!Refresh', VisualizerName, VisualizerConfig)
+	end
 end
