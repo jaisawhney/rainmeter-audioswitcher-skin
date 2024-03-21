@@ -1,3 +1,4 @@
+-- Skin init
 function Initialize()
 	FindDevices()
 
@@ -26,7 +27,6 @@ function FindDevices()
 		elseif deviceName == headphoneName then
 			SKIN:Bang('!SetVariable', 'HeadphoneDeviceIndex', idx)
 		end
-
 		idx = idx + 1
 	end
 end
@@ -37,26 +37,28 @@ function GetDeviceName()
 	return deviceName
 end
 
--- Updates the correct icon to match the current output device and refreshes the visualizer
+-- Update the correct icon to match the current output device
 function UpdateDeviceIcon()
 	SpeakerDeviceMeter = SKIN:GetMeter('Speakers')
 	HeadphoneDeviceMeter = SKIN:GetMeter('Headphones')
-
-	VisualizerName=SKIN:GetVariable('VisualizerName')
-	VisualizerConfig=SKIN:GetVariable('VisualizerConfig')
 
 	deviceName = GetDeviceName()
 
 	if deviceName == SKIN:GetVariable('SpeakerDeviceName') then
 		SpeakerDeviceMeter:Show()
 		HeadphoneDeviceMeter:Hide()
-
-		SKIN:Bang('!Refresh', VisualizerName, VisualizerConfig)
-
 	elseif deviceName == SKIN:GetVariable('HeadphoneDeviceName') then
 		SpeakerDeviceMeter:Hide()
 		HeadphoneDeviceMeter:Show()
-		
+	end
+end
+
+-- Refresh the visualizer
+function RefreshVisualizer()
+	VisualizerName=SKIN:GetVariable('VisualizerName')
+	VisualizerConfig=SKIN:GetVariable('VisualizerConfig')
+
+	if (VisualizerName ~= "") and (VisualizerConfig ~= "") then
 		SKIN:Bang('!Refresh', VisualizerName, VisualizerConfig)
 	end
 end
